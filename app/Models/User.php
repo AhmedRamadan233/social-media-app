@@ -96,4 +96,10 @@ class User extends Authenticatable
         $this->friends()->detach($user->id);
         $user->friends()->detach($this->id);
     }
+
+
+    public function likes()
+    {
+        return $this->hasMany(Like::class);
+    }
 }

@@ -269,10 +269,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
             </ul>
           </li> --}}
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="{{route('dashboard.index')}}" class="nav-link">
                                 <i class="nav-icon fas fa-th"></i>
                                 <p>
-                                    Simple Link
+                                   HOME
                                 </p>
                             </a>
                         </li>
@@ -301,7 +301,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                 </p>
                             </a>
                         </li>
-                        
 
                         <li class="nav-item pt-5">
                             <form method="POST" action="{{ route('logout') }} " style="display:inline">
@@ -393,6 +392,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script src="{{ asset('datatable/js/dataTables.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('sweetalert2/sweetalert2.min.js') }}"></script>
     <script src="{{ asset('toastr/toastr.min.js') }}"></script>
+
+    @stack('scripts')
     {{-- <script>
   $(document).ready(function() {
     $("#localeSelect").change(function() {
@@ -427,7 +428,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             });
         });
     </script>
-
-</body> --}}
+--}}
+</body> 
 
 </html>

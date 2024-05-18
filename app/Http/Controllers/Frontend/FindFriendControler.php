@@ -64,17 +64,7 @@ class FindFriendControler extends Controller
     }
 
 
-    // public function allFriend()
-    // {
-    //     $friends = User::with('profile')
-    //         ->where('id', '<>', Auth::id())
-    //         $user->friendRequestsSent()->where('users.id', auth()->id())->exists()
-    //         // ->inRandomOrder()
-    //         // ->take(8)
-    //         ->get();
 
-    //     return view('dashboard.pages.users.all-my-friend', compact('friends'));
-    // }
     public function allFriend()
     { 
         $user = User::find(auth()->id());
