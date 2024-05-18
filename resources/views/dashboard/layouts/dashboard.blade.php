@@ -285,6 +285,24 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             </a>
                         </li>
 
+                        <li class="nav-item">
+                            <a href="{{ route('friends.index') }}" class="nav-link">
+                                <i class="nav-icon fas fa-th"></i>
+                                <p>
+                                    {{ __('Find Friend') }}
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('allFriend.index') }}" class="nav-link">
+                                <i class="nav-icon fas fa-th"></i>
+                                <p>
+                                    {{ __('My Friend') }}
+                                </p>
+                            </a>
+                        </li>
+                        
+
                         <li class="nav-item pt-5">
                             <form method="POST" action="{{ route('logout') }} " style="display:inline">
                                 @csrf

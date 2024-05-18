@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class User extends Authenticatable
 {
@@ -55,4 +56,44 @@ class User extends Authenticatable
             ->withDefault();
     }
 
+
+
+
+    public function friends(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'friends', 'user_id', 'friend_id');
+    }
+
+    public function friendRequestsSent()
+    {
+        return $this->belongsToMany(User::class, 'friend_requests', 'sender_id', 'receiver_id');
+    }
+
+    public function friendRequestsReceived()
+    {
+        return $this->belongsToMany(User::class, 'friend_requests', 'receiver_id', 'sender_id');
+    }
+
+    public function sendFriendRequest(User $user): void
+    {
+        $this->friendRequestsSent()->attach($user->id);
+    }
+
+    public function acceptFriendRequest(User $user): void
+    {
+        $this->friendRequestsReceived()->detach($user->id);
+        $this->friends()->attach($user->id);
+        $user->friends()->attach($this->id);
+    }
+
+    public function declineFriendRequest(User $user): void
+    {
+        $this->friendRequestsReceived()->detach($user->id);
+    }
+
+    public function removeFriend(User $user): void
+    {
+        $this->friends()->detach($user->id);
+        $user->friends()->detach($this->id);
+    }
 }
