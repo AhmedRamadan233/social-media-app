@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Frontend;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Comment;
@@ -12,16 +12,8 @@ class CommentController extends Controller
 {
 
 
-    public function getPostId($id)
-    {
-        $postId = Post::findOrFail($id);
 
-        $postContent = $postId->content;
-
-        return response()->json(['postId' => $id , 'postContent'=>$postContent]);
-    }
-
-    public function store(Request $request)
+    public function store(Request $request )
     {
         $validatedData = $request->validate([
             'content' => 'required|string|max:255',
@@ -39,6 +31,4 @@ class CommentController extends Controller
             'message' => 'Comment created successfully.',
         ], 201);
     }
-    
-    
 }
