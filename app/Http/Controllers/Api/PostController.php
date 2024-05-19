@@ -1,14 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Frontend;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Friend;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
@@ -18,8 +15,10 @@ class PostController extends Controller
             ->orderByDesc('id')
             ->paginate(10);
 
-        return view('dashboard.pages.home.index', ['posts' => $posts]);
+        return response()->json(['posts' => $posts]);
     }
+
+
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -38,7 +37,6 @@ class PostController extends Controller
     }
 
 
-
     public function update(Request $request, $id)
     {
         $validatedData = $request->validate([
@@ -53,7 +51,6 @@ class PostController extends Controller
             'message' => 'Post updated successfully.',
         ], 200);
     }
-
 
 
     public function destroy(Post $post)
