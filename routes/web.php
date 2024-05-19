@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ProfileController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Frontend\CommentController;
 use App\Http\Controllers\Frontend\FindFriendControler;
 use App\Http\Controllers\Frontend\LikeController;
@@ -23,6 +25,17 @@ Route::post('/register', [RegisterController::class, 'register'])->name('registe
 Route::get('/login', [LoginController::class, 'index'])->name('login');
 Route::post('/login', [LoginController::class, 'login'])->name('login.attempt');
 
+
+
+
+Route::prefix('forgot-password')->group(function () {
+    Route::get('/', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+    Route::post('/send-to-mail', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+    
+    
+    Route::get('reset-password/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+    Route::post('reset-password', [ResetPasswordController::class, 'reset'])->name('password.update');
+});
 
 
 Route::prefix('dashboard')->middleware(FriendRequestsCountMiddleware::class)->group(function (){

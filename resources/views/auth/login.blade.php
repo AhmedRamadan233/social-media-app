@@ -23,7 +23,7 @@
                             @csrf
                             <div class="mb-3">
                                 <label for="email_or_phone" class="form-label">{{ __('Email or Phone') }}</label>
-                                <input type="text" class="form-control" id="email_or_phone" name="email">
+                                <input type="email" class="form-control" id="email_or_phone" name="email">
                             </div>
                             <div class="mb-3">
                                 <label for="password" class="form-label">{{ __('Password') }}</label>
@@ -31,7 +31,11 @@
                             </div>
                             <button type="submit" class="btn btn-primary">{{ __('Login') }}</button>
                         </form>
-                        <a href="{{ route('register.index') }}">go to register</a>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a href="{{ route('register.index') }}">Go to Register</a>
+                            <a href="{{ route('password.request') }}">Forgot Password</a>
+                        </div>
+
                     </div>
                 </div>
             </div>
