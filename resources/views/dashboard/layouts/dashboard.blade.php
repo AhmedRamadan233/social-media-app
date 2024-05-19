@@ -269,10 +269,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
             </ul>
           </li> --}}
                         <li class="nav-item">
-                            <a href="{{route('dashboard.index')}}" class="nav-link">
+                            <a href="{{ route('dashboard.index') }}" class="nav-link">
                                 <i class="nav-icon fas fa-th"></i>
                                 <p>
-                                   HOME
+                                    HOME
                                 </p>
                             </a>
                         </li>
@@ -301,7 +301,16 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                 </p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="{{ route('requests-to-be-friend') }}" class="nav-link">
+                                <i class="nav-icon fas fa-th"></i>
+                                <p>
+                                    {{ __('Requests to be friend') }}
 
+                                    <span class="btn btn-danger">{{$requestsCount }}</span>
+                                </p>
+                            </a>
+                        </li>
                         <li class="nav-item pt-5">
                             <form method="POST" action="{{ route('logout') }} " style="display:inline">
                                 @csrf
@@ -429,6 +438,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
         });
     </script>
 --}}
-</body> 
+</body>
 
 </html>

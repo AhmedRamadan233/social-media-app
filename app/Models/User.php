@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Facades\Auth;
 
 class User extends Authenticatable
 {
@@ -101,5 +102,20 @@ class User extends Authenticatable
     public function likes()
     {
         return $this->hasMany(Like::class);
+    }
+
+
+    public function isFriendsWith($userId)
+    {
+        $currentUserId = Auth::id();
+
+        // Check if there is a mutual friendship
+        return Friend::where(function ($query) use ($currentUserId, $userId) {
+            $query->where('user_id', $currentUserId)
+                  ->where('friend_id', $userId);
+        })->orWhere(function ($query) use ($currentUserId, $userId) {
+            $query->where('user_id', $userId)
+                  ->where('friend_id', $currentUserId);
+        })->exists();
     }
 }

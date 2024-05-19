@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\FriendPostsScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Post extends Model
 {
@@ -30,4 +32,11 @@ class Post extends Model
     {
         return $this->hasMany(Like::class);
     }
+
+    protected static function booted()
+    {
+        static::addGlobalScope(new FriendPostsScope);
+    }
+
+
 }

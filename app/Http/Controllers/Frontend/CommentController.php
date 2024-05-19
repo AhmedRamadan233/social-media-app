@@ -18,11 +18,12 @@ class CommentController extends Controller
     // }
     public function getPostId($id)
     {
-        // $postId = Post::findOrFail($id);
-        // Here you can directly return the ID
-        return response()->json(['postId' => $id]);
-    }
+        $postId = Post::findOrFail($id);
 
+        $postContent = $postId->content;
+
+        return response()->json(['postId' => $id , 'postContent'=>$postContent]);
+    }
 
     public function store(Request $request)
     {
@@ -42,4 +43,6 @@ class CommentController extends Controller
             'message' => 'Comment created successfully.',
         ], 201);
     }
+    
+    
 }

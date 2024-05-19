@@ -22,10 +22,10 @@
                         <a href="#" class="card-link">{{ $friend->name }}</a>
                     </div>
                     <div class="card-footer d-flex justify-content-between align-items-center">
-                        <form action="{{ route('remove.friend.request', $friend->id) }}" method="POST">
+                        {{-- <form action="{{ route('remove.friend.request', $friend->id) }}" method="POST">
                             @csrf
                             <button type="submit" class="btn btn-danger">Remove</button>
-                        </form>
+                        </form> --}}
                     </div>
                 </div>
             </div>

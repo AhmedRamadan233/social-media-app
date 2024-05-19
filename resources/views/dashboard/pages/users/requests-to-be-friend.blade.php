@@ -9,7 +9,7 @@
 
 @section('content')
     <div class="row">
-        @foreach ($users as $user)
+        @foreach ($requestsToBeFriends as $requestsToBeFriend)
             <div class="col-lg-3">
                 <div class="card card-primary card-outline">
 
@@ -17,17 +17,19 @@
                         <div class="d-flex justify-content-between align-items-center">
                         </div>
                     </div>
-                    <img class="card-img-top" src="{{ asset($user->profile->image) }}" alt="Card image cap">
+                    <img class="card-img-top" src="{{ asset($requestsToBeFriend->sender->profile->image) }}" alt="Card image cap">
                     <div class="card-body">
-                        <a href="#" class="card-link">{{ $user->name }}</a>
+                        <a href="#" class="card-link">{{ $requestsToBeFriend->sender->name }}</a>
                     </div>
                     <div class="card-footer d-flex justify-content-between align-items-center">
-                        {{-- @if($user->) --}}
-                        <form action="{{ route('send.friend.request', $user->id) }}" method="POST">
+                        <form action="{{ route('accept.friend.request', $requestsToBeFriend->id) }}" method="POST">
                             @csrf
-                            <button type="submit" class="btn btn-primary">Add Friend</button>
+                            <button type="submit" class="btn btn-primary">Accept</button>
                         </form>
-                        {{-- @endif --}}
+                        <form action="{{ route('remove.friend.request', $requestsToBeFriend->id) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="btn btn-danger">Remove</button>
+                        </form>
                     </div>
                 </div>
             </div>

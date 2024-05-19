@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
+use App\Models\FriendRequests;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -11,6 +12,7 @@ class FindFriendControler extends Controller
 {
     public function index()
     {
+        
         $users = User::with('profile')
             ->where('id', '<>', Auth::id())
             // ->inRandomOrder()
@@ -66,22 +68,21 @@ class FindFriendControler extends Controller
 
 
     public function allFriend()
-    { 
+    {
         $user = User::find(auth()->id());
         $friends = $user->friends()->with('profile')
             ->where('users.id', '<>', Auth::id()) // Specify the table name for the 'id' column
             ->get();
-    
+
         return view('dashboard.pages.users.all-my-friend', compact('friends'));
     }
 
-
-
-
-
-
-
-
-
-
+    public function requestsToBeFriend()
+    {
+        // Fetch friend requests along with the sender's information
+        $requestsToBeFriends = FriendRequests::with('sender')
+            ->where('receiver_id', Auth::id())
+            ->get();
+        return view('dashboard.pages.users.requests-to-be-friend', compact('requestsToBeFriends'));
+    }
 }

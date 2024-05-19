@@ -7,6 +7,7 @@ use App\Http\Controllers\Frontend\CommentController;
 use App\Http\Controllers\Frontend\FindFriendControler;
 use App\Http\Controllers\Frontend\LikeController;
 use App\Http\Controllers\Frontend\PostController;
+use App\Http\Middleware\FriendRequestsCountMiddleware;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -24,7 +25,7 @@ Route::post('/login', [LoginController::class, 'login'])->name('login.attempt');
 
 
 
-Route::prefix('dashboard')->group(function () {
+Route::prefix('dashboard')->middleware(FriendRequestsCountMiddleware::class)->group(function (){
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
     Route::middleware(['auth'])->group(function () {
@@ -40,10 +41,13 @@ Route::prefix('dashboard')->group(function () {
             Route::post('/accept-friend-request/{id}', [FindFriendControler::class, 'acceptFriendRequest'])->name('accept.friend.request');
             Route::post('/remove-friend-request/{id}', [FindFriendControler::class, 'removeFriendRequest'])->name('remove.friend.request');
             Route::get('/all-friend', [FindFriendControler::class, 'allFriend'])->name('allFriend.index');
+            Route::get('/requests-to-be-friend', [FindFriendControler::class, 'requestsToBeFriend'])->name('requests-to-be-friend');
+
         });
 
         Route::prefix('posts')->group(function () {
             Route::post('/', [PostController::class, 'store'])->name('posts.store');
+            Route::post('/update/{id}', [PostController::class, 'update'])->name('posts.update');
         });
         Route::prefix('comments')->group(function () {
             Route::get('/{id}', [CommentController::class, 'getPostId'])->name('comments.get-post-id');

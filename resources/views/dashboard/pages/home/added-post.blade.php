@@ -21,16 +21,24 @@
         <div class="card mb-4">
             <div class="card-body">
                 <div class="media">
-                    <img src="{{ asset(auth()->user()->profile->image) }}" class="img-circle " alt="User Image"
+                    <img src="{{ asset($post->user->profile->image) }}" class="img-circle " alt="User Image"
                         style="width: 64px; height: 64px;">
                     <div class="media-body">
                         <h5 class="mt-0">{{ $post->user->name }}</h5>
                         <p>{{ $post->content }}</p>
                         <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <button type="button" class="btn btn-outline-primary btn-sm mr-2">Edit</button>
-                                <button type="button" class="btn btn-outline-danger btn-sm">Delete</button>
-                            </div>
+                            @if ($post->user->id === Auth::user()->id)
+                                <div>
+
+                                    <button type="button" class="btn btn-outline-primary btn-sm mr-2"
+                                        onclick="editCommentModal({{ $post->id }})">
+                                        Edit Post
+                                    </button>
+
+                                    <button type="button" class="btn btn-outline-danger btn-sm">Delete</button>
+
+                                </div>
+                            @endif
                             <div>
                                 <button type="button" class="btn btn-outline-secondary btn-sm mr-2 like-button">
                                     Like

@@ -12,6 +12,8 @@
         @include('dashboard.pages.home.added-post')
 
         @include('dashboard.pages.home.added-comment')
+        @include('dashboard.pages.home.edit-comment')
+
     </div>
     <!-- /.row -->
 @endsection
@@ -69,6 +71,63 @@
             });
         }
 
+
+        function editCommentModal(postId) {
+            $.ajax({
+                url: '/dashboard/comments/' + postId,
+                type: 'GET',
+                success: function(response) {
+                    $('#editCommentModal').modal('show');
+                    $('#post_id').val(response.postId);
+                    $('#content').val(response.postContent);
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                }
+            });
+        }
+
+        $(document).ready(function() {
+            $('#editPostForm').on('submit', function(event) {
+                event.preventDefault();
+                var formData = new FormData($(this)[0]);
+                var postId = $('#post_id').val(); // Get the post ID from the hidden input field
+                $.ajax({
+                    url: $(this).attr('action').replace(':id',
+                    postId), // Include the post ID in the URL
+                    method: $(this).attr('method'),
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+
+                        $('#postsCard').load(location.href + ' #postsCard>*', '');
+                        $('#editCommentModal').modal('hide');
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText);
+                    }
+                });
+            });
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         $(document).ready(function() {
             $('#createCommentForm').on('submit', function(event) {
                 event.preventDefault();
@@ -93,6 +152,5 @@
                 });
             });
         })
-        
     </script>
 @endpush
