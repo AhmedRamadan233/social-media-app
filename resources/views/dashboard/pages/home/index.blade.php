@@ -12,25 +12,15 @@
         @include('dashboard.pages.home.added-post')
 
         @include('dashboard.pages.home.added-comment')
-        @include('dashboard.pages.home.edit-comment')
+        @include('dashboard.pages.home.edit-post-modal')
+        @include('dashboard.pages.home.confirm-delete-modal')
+
 
     </div>
     <!-- /.row -->
 @endsection
 @push('scripts')
     <script>
-        function toggleLike(button) {
-            if (button.classList.contains('btn-outline-secondary')) {
-                button.classList.remove('btn-outline-secondary');
-                button.classList.add('btn-secondary');
-                button.textContent = 'Liked';
-            } else {
-                button.classList.remove('btn-secondary');
-                button.classList.add('btn-outline-secondary');
-                button.textContent = 'Like';
-            }
-        }
-
         $(document).ready(function() {
             $('#createPostForm').on('submit', function(event) {
                 event.preventDefault();
@@ -72,12 +62,12 @@
         }
 
 
-        function editCommentModal(postId) {
+        function editPostModal(postId) {
             $.ajax({
                 url: '/dashboard/comments/' + postId,
                 type: 'GET',
                 success: function(response) {
-                    $('#editCommentModal').modal('show');
+                    $('#editPostModal').modal('show');
                     $('#post_id').val(response.postId);
                     $('#content').val(response.postContent);
                 },
@@ -94,7 +84,7 @@
                 var postId = $('#post_id').val(); // Get the post ID from the hidden input field
                 $.ajax({
                     url: $(this).attr('action').replace(':id',
-                    postId), // Include the post ID in the URL
+                        postId), // Include the post ID in the URL
                     method: $(this).attr('method'),
                     data: formData,
                     contentType: false,
@@ -105,7 +95,7 @@
                     success: function(response) {
 
                         $('#postsCard').load(location.href + ' #postsCard>*', '');
-                        $('#editCommentModal').modal('hide');
+                        $('#editPostModal').modal('hide');
                     },
                     error: function(xhr, status, error) {
                         console.error(xhr.responseText);
@@ -152,5 +142,52 @@
                 });
             });
         })
+
+
+        function confirmDelete(postId) {
+            $('#confirmDeleteModal').modal('show'); // Show the modal
+
+            $('#confirmDeleteBtn').off('click').on('click', function() { // Ensure previous click handlers are removed
+                $.ajax({
+                    url: "{{ route('posts.destroy', '__postId__') }}".replace('__postId__', postId),
+                    type: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+                        console.log(response);
+                        $('#confirmDeleteModal').modal('hide'); // Hide the modal
+                        location.reload();
+                    },
+                    error: function(xhr) {
+                        console.log(xhr.responseText);
+                    }
+                });
+            });
+        }
+
+
+
+        $(document).ready(function() {
+            $('.like-button').on('click', function() {
+                var button = $(this);
+                var postId = button.data('post-id');
+                var form = $('#like-form-' + postId);
+
+                $.ajax({
+                    url: form.attr('action'),
+                    method: 'POST',
+                    data: form.serialize(),
+                    success: function(response) {
+                        if (response.success) {
+                            location.reload();
+                            button.toggleClass('btn-outline-secondary btn-secondary');
+                            button.text(response.isLiked ? 'Unlike' : 'Like');
+                           
+                        }
+                    }
+                });
+            });
+        });
     </script>
 @endpush

@@ -48,13 +48,15 @@ Route::prefix('dashboard')->middleware(FriendRequestsCountMiddleware::class)->gr
         Route::prefix('posts')->group(function () {
             Route::post('/', [PostController::class, 'store'])->name('posts.store');
             Route::post('/update/{id}', [PostController::class, 'update'])->name('posts.update');
+            Route::delete('delete/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
+
         });
         Route::prefix('comments')->group(function () {
             Route::get('/{id}', [CommentController::class, 'getPostId'])->name('comments.get-post-id');
             Route::post('/store', [CommentController::class, 'store'])->name('comments.store');
         });
         Route::prefix('likes')->group(function () {
-            Route::post('/toggle-like/{postId}', [LikeController::class, 'toggleLike'])->name('toggle.like');
+            Route::post('/toggle', [LikeController::class, 'toggleLike'])->name('likes.toggle');
         });
     });
 });

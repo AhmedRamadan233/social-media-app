@@ -22,7 +22,7 @@
                         <a href="#" class="card-link">{{ $requestsToBeFriend->sender->name }}</a>
                     </div>
                     <div class="card-footer d-flex justify-content-between align-items-center">
-                        <form action="{{ route('accept.friend.request', $requestsToBeFriend->id) }}" method="POST">
+                        <form action="{{ route('accept.friend.request', $requestsToBeFriend->sender->id) }}" method="POST">
                             @csrf
                             <button type="submit" class="btn btn-primary">Accept</button>
                         </form>

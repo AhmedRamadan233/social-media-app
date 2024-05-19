@@ -12,27 +12,52 @@ use Illuminate\Support\Facades\Auth;
 class LikeController extends Controller
 {
 
-    // public function toggleLike(Request $request, Post $post)
+    // public function toggleLike(Request $request)
     // {
-    //     $user = Auth::user();
+    //     $user_id = auth()->id();
+    //     $post_id = $request->post_id;
 
-    //     $like = Like::where('user_id', $user->id)->where('post_id', $post->id)->first();
+    //     $like = Like::where('user_id', $user_id)->where('post_id', $post_id)->first();
 
     //     if ($like) {
-    //         $like->delete();
-    //         $liked = false;
+    //         // Toggle the isLiked status
+    //         $like->isLiked = !$like->isLiked;
+    //         $like->save();
     //     } else {
+    //         // Create a new like record
     //         Like::create([
-    //             'user_id' => $user->id,
-    //             'post_id' => $post->id,
+    //             'user_id' => $user_id,
+    //             'post_id' => $post_id,
+    //             'isLiked' => true,
     //         ]);
-    //         $liked = true;
     //     }
 
-    //     return response()->json([
-    //         'liked' => $liked,
-    //         'message' => 'Like status toggled successfully.'
-    //     ]);
+    //     return response()->json(['success' => true, 'isLiked' => $like ? $like->isLiked : true]);
     // }
 
+
+
+    public function toggleLike(Request $request)
+    {
+        $user_id = auth()->id();
+        $post_id = $request->post_id;
+
+        $like = Like::where('user_id', $user_id)->where('post_id', $post_id)->first();
+
+        if ($like) {
+            // Delete the like if it exists
+            $like->delete();
+            $isLiked = false;
+        } else {
+            // Create a new like record
+            Like::create([
+                'user_id' => $user_id,
+                'post_id' => $post_id,
+                'isLiked' => true,
+            ]);
+            $isLiked = true;
+        }
+
+        return response()->json(['success' => true, 'isLiked' => $isLiked]);
+    }
 }

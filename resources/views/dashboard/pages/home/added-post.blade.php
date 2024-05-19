@@ -31,18 +31,31 @@
                                 <div>
 
                                     <button type="button" class="btn btn-outline-primary btn-sm mr-2"
-                                        onclick="editCommentModal({{ $post->id }})">
+                                        onclick="editPostModal({{ $post->id }})">
                                         Edit Post
                                     </button>
 
-                                    <button type="button" class="btn btn-outline-danger btn-sm">Delete</button>
+                                    <button type="button" class="btn btn-icon btn-danger"
+                                        onclick="confirmDelete('{{ $post->id }}')">
+                                        Delete
+                                    </button>
 
                                 </div>
                             @endif
                             <div>
-                                <button type="button" class="btn btn-outline-secondary btn-sm mr-2 like-button">
-                                    Like
-                                </button>
+                                @php
+                                    $isLiked = $post->likes()->where('user_id', auth()->id())->exists();
+                                @endphp
+                                <form id="like-form-{{ $post->id }}" action="{{ route('likes.toggle') }}"
+                                    method="POST" style="display: inline;">
+                                    @csrf
+                                    <input type="hidden" name="post_id" value="{{ $post->id }}">
+                                    <button type="button"
+                                        class="btn {{ $isLiked ? 'btn-secondary' : 'btn-outline-secondary' }} btn-sm mr-2 like-button"
+                                        data-post-id="{{ $post->id }}">
+                                        {{ $isLiked ? 'Unlike' : 'Like' }}
+                                    </button>
+                                </form>
                                 <span class="badge badge-primary">{{ $post->likes->count() }}</span>
                                 <button type="button" class="btn btn-outline-secondary btn-sm" data-toggle="modal"
                                     data-target="#commentModal"
@@ -53,11 +66,13 @@
                         <div class="mt-3">
                             <h6>Liked by:</h6>
                             <ul class="list-inline">
-                                <li class="list-inline-item"><img src="user1.jpg" class="rounded-circle" alt="User 1"
-                                        style="width: 32px; height: 32px;"></li>
-                                <li class="list-inline-item"><img src="user2.jpg" class="rounded-circle" alt="User 2"
-                                        style="width: 32px; height: 32px;"></li>
-                                <!-- Add more users as needed -->
+                                @foreach ($post->likes as $like)
+                                    <li class="list-inline-item"><img src="{{ asset($like->user->profile->image) }}"
+                                            class="rounded-circle" alt="{{ $like->user->name }}" style="width: 32px; height: 32px;">
+                                    </li>
+                                @endforeach
+
+
                             </ul>
                         </div>
                         <div class="mt-3">

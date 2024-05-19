@@ -22,12 +22,10 @@
                         <a href="#" class="card-link">{{ $user->name }}</a>
                     </div>
                     <div class="card-footer d-flex justify-content-between align-items-center">
-                        {{-- @if($user->) --}}
                         <form action="{{ route('send.friend.request', $user->id) }}" method="POST">
                             @csrf
                             <button type="submit" class="btn btn-primary">Add Friend</button>
                         </form>
-                        {{-- @endif --}}
                     </div>
                 </div>
             </div>

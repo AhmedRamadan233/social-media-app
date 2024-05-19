@@ -12,13 +12,38 @@ class FindFriendControler extends Controller
 {
     public function index()
     {
+        $users = User::with(['profile', 'friendRequestsReceived', 'friendRequestsSent', 'friends'])->get();
+    
+        $senderIds = [];
+        $receiverIds = [];
+        $friendsIds = []; 
+    
+        foreach ($users as $user) {
+            foreach ($user->friendRequestsReceived as $requestReceived) {
+                $senderId = $requestReceived->pivot->sender_id;
+                $senderIds[] = $senderId;
+            }
+            
+            foreach ($user->friendRequestsSent as $requestSent) {
+                $receiverId = $requestSent->pivot->receiver_id;
+                $receiverIds[] = $receiverId;
+            }
+    
+            foreach ($user->friends as $friend) {
+                $friendId = $friend->pivot->friend_id;
+                $friendsIds[] = $friendId;
+            }
+        }
         
+        $excludedIds = array_merge($senderIds, $receiverIds, $friendsIds);
+    
         $users = User::with('profile')
             ->where('id', '<>', Auth::id())
+            ->whereNotIn('id', $excludedIds)
             // ->inRandomOrder()
             // ->take(8)
             ->get();
-
+    
         return view('dashboard.pages.users.index', compact('users'));
     }
 
@@ -41,17 +66,15 @@ class FindFriendControler extends Controller
     {
         $user = User::find(auth()->id());
         $friend = User::findOrFail($id);
-
         if ($user->friendRequestsReceived()->where('sender_id', $friend->id)->exists()) {
             $user->acceptFriendRequest($friend);
             return redirect()->back()->with('success', 'Friend request accepted!');
         }
-
+    
         return redirect()->back()->with('error', 'Cannot accept friend request.');
     }
-
-
-
+    
+    
     public function removeFriendRequest($id)
     {
         $user = User::find(auth()->id());
@@ -79,10 +102,8 @@ class FindFriendControler extends Controller
 
     public function requestsToBeFriend()
     {
-        // Fetch friend requests along with the sender's information
-        $requestsToBeFriends = FriendRequests::with('sender')
-            ->where('receiver_id', Auth::id())
-            ->get();
+        $requestsToBeFriends = FriendRequests::with('sender')->where('receiver_id', Auth::id())->get();
+
         return view('dashboard.pages.users.requests-to-be-friend', compact('requestsToBeFriends'));
     }
 }

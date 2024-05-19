@@ -53,8 +53,14 @@ class PostController extends Controller
         return response()->json([
             'post' => $post,
             'message' => 'Post updated successfully.',
-        ], 200);  
+        ], 200);
     }
-    
 
+
+
+    public function destroy(Post $post)
+    {
+        $post->delete();
+        return response()->json(['message' => 'Post deleted successfully']);
+    }
 }
