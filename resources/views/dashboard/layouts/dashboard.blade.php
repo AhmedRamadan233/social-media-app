@@ -29,6 +29,22 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <link rel="stylesheet" href="{{ asset('sweetalert2/sweetalert2.min.css') }}">
     <!-- Toastr CSS -->
     <link rel="stylesheet" href="{{ asset('toastr/toastr.min.css') }}">
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+    <!-- Laravel Echo Initialization -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/laravel-echo/1.11.0/echo.min.js"></script>
+    <script>
+        window.Echo = new Echo({
+            broadcaster: 'pusher',
+            key: '2741b73797df27cc078b',
+            cluster: 'eu',
+            forceTLS: true
+        });
+    
+        var channel = Echo.channel('my-channel');
+        channel.listen('.my-event', function(data) {
+            alert(JSON.stringify(data));
+        });
+    </script>
 </head>
 
 <body class="hold-transition sidebar-mini">
@@ -401,7 +417,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script src="{{ asset('datatable/js/dataTables.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('sweetalert2/sweetalert2.min.js') }}"></script>
     <script src="{{ asset('toastr/toastr.min.js') }}"></script>
-
+    
     @stack('scripts')
     {{-- <script>
   $(document).ready(function() {
